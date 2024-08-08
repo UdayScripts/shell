@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>yt-dlp Online</title>
+</head>
+<body>
+    <h1>yt-dlp Online</h1>
+    <form id="yt-dlp-form">
+        <label for="url">Video URL:</label>
+        <input type="text" id="url" name="url" required>
+        <button type="submit">Download</button>
+    </form>
+    <pre id="output"></pre>
+
+    <script>
+        document.getElementById('yt-dlp-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = document.getElementById('url').value;
+
+            fetch('/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('output').textContent = data.error;
+                } else {
+                    document.getElementById('output').textContent = data.output;
+                }
+            })
+            .catch(error => {
+                document.getElementById('output').textContent = error;
+            });
+        });
+    </script>
+</body>
+</html>
